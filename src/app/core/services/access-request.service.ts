@@ -57,7 +57,11 @@ export class AccessRequestService {
   }
 
   decide(id: number, payload: DecisionPayload): Observable<AccessRequest> {
-    return this.http.put<AccessRequest>(`${this.base}/${id}/decisao`, payload);
+    let params = new HttpParams().set('estado', payload.decisao);
+    if (payload.justificativaDecisao) {
+      params = params.set('justificacao', payload.justificativaDecisao);
+    }
+    return this.http.put<AccessRequest>(`${this.base}/${id}/decisao`, null, { params });
   }
 
   getDashboardSummary(): Observable<DashboardSummary> {
