@@ -1,5 +1,5 @@
 export const environment = {
-  production: false,
+  production: true,
   apiUrl: 'https://projetonatixis.onrender.com/api',
   /**
    * When true, every HttpClient call to apiUrl is answered by an in-memory mock
