@@ -1,6 +1,6 @@
 export const environment = {
   production: false,
-  apiUrl: 'http://localhost:8080/api',
+  apiUrl: 'https://projetonatixis.onrender.com/api',
   /**
    * When true, every HttpClient call to apiUrl is answered by an in-memory mock
    * (see core/interceptors/mock-api.interceptor.ts) instead of hitting a real backend.
