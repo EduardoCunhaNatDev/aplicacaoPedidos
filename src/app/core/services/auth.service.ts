@@ -54,4 +54,8 @@ export class AuthService {
       return null;
     }
   }
+
+    getUserId(): number | null {
+      return this.currentUser()?.id || null;
+  }
 }

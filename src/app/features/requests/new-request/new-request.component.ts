@@ -62,15 +62,24 @@ export class NewRequestComponent implements OnInit {
     this.errorMessage.set(null);
 
     const { aplicacaoId, justificativa } = this.form.getRawValue();
-    this.requestsService.create({ aplicacaoId: aplicacaoId!, justificativa: justificativa! }).subscribe({
+
+    const idUtilizadorLogado = 1; 
+
+    const payload = {
+      idAplicacao: aplicacaoId!,
+      idUtilizador: idUtilizadorLogado,
+      justificacaoPedido: justificativa!
+    };
+
+    this.requestsService.create(payload).subscribe({
       next: (created) => {
         this.submitting.set(false);
-        this.router.navigate(['/pedidos', created.id]);
+        this.router.navigate(['/meus-pedidos']); 
       },
       error: (err) => {
         this.submitting.set(false);
         this.errorMessage.set(
-          err?.error?.message ?? 'Não foi possível submeter o pedido. Verifique o limite de pedidos ativos.',
+          err?.error?.message ?? 'Não foi possível submeter o pedido.',
         );
       },
     });

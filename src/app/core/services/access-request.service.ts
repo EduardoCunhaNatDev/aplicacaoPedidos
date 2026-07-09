@@ -1,5 +1,5 @@
-import { Injectable } from '@angular/core';
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { forwardRef, Inject, Injectable } from '@angular/core';
+import { HttpClient, HttpParams, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import {
@@ -10,21 +10,30 @@ import {
   RequestFilters,
 } from '../models/access-request.model';
 import { Page } from '../models/page.model';
+import { AuthService } from './auth.service';
 
 @Injectable({ providedIn: 'root' })
 export class AccessRequestService {
   private readonly base = `${environment.apiUrl}/requests`;
 
-  constructor(private readonly http: HttpClient) {}
+  constructor(
+    private readonly http: HttpClient,
+    @Inject(forwardRef(() => AuthService)) private readonly authService: AuthService
+  ) {}
 
   /** "Meus Pedidos" — requests created by the logged-in colaborador. */
   getMyRequests(filters: RequestFilters): Observable<Page<AccessRequest>> {
-    return this.http.get<Page<AccessRequest>>(`${this.base}/me`, { params: this.toParams(filters) });
-  }
+    const userId = this.authService.getUserId();
+    const headers = new HttpHeaders().set('X-User-ID', String(userId ?? ''));
 
-  /** "Pedidos Pendentes" — queue for the approver, defaults to PENDENTE state. */
+    return this.http.get<Page<AccessRequest>>(`${this.base}/me`, { 
+      params: this.toParams(filters),
+      headers 
+    });
+  }
+ 
   getPendingRequests(filters: RequestFilters): Observable<Page<AccessRequest>> {
-    return this.http.get<Page<AccessRequest>>(`${this.base}/pendentes`, { params: this.toParams(filters) });
+    return this.http.get<Page<AccessRequest>>(this.base, { params: this.toParams(filters) });
   }
 
   /** "Todos os Pedidos" — full history view available to approvers. */
@@ -36,8 +45,15 @@ export class AccessRequestService {
     return this.http.get<AccessRequest>(`${this.base}/${id}`);
   }
 
-  create(payload: NewAccessRequestPayload): Observable<AccessRequest> {
-    return this.http.post<AccessRequest>(this.base, payload);
+  create(payload: any): Observable<any> {
+    const userId = this.authService.getUserId();
+
+    const payloadComUser = {
+      ...payload,
+      idUtilizador: userId
+    };
+    
+    return this.http.post(`${environment.apiUrl}/requests`, payloadComUser);
   }
 
   decide(id: number, payload: DecisionPayload): Observable<AccessRequest> {

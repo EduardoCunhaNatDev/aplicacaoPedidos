@@ -6,5 +6,5 @@ export const environment = {
    * (see core/interceptors/mock-api.interceptor.ts) instead of hitting a real backend.
    * Flip to false once your friend's Spring Boot API is ready — see MOCK_TESTING.md.
    */
-  useMockApi: true,
+  useMockApi: false,
 };

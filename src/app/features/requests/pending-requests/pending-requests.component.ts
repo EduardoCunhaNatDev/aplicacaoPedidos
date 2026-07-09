@@ -45,7 +45,7 @@ export class PendingRequestsComponent implements OnInit {
 
   load(): void {
     this.loading.set(true);
-    this.requestsService.getPendingRequests({ ...this.filters, page: this.page(), size: 10 }).subscribe({
+    this.requestsService.getPendingRequests({ ...this.filters, page: this.page(), size: 20 }).subscribe({
       next: (result) => {
         this.requests.set(result.content);
         this.totalPages.set(result.totalPages);

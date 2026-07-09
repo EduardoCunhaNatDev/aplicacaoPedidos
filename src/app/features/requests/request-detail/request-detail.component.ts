@@ -34,6 +34,7 @@ export class RequestDetailComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    console.log((this.route.snapshot.paramMap))
     const id = Number(this.route.snapshot.paramMap.get('id'));
     this.requestsService.getById(id).subscribe({
       next: (req) => {
