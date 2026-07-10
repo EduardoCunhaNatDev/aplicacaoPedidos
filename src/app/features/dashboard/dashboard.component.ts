@@ -30,6 +30,9 @@ export class DashboardComponent implements OnInit {
     const recent$ = isAprovador
       ? this.requestsService.getPendingRequests({ page: 0, size: 5 })
       : this.requestsService.getMyRequests({ page: 0, size: 5 });
+    
+    /*Debugging request */
+    console.log('Recent requests:', recent$);
 
     forkJoin({
       summary: this.requestsService.getDashboardSummary(),
