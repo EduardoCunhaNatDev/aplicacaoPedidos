@@ -90,6 +90,17 @@
                       >
                         👁
                       </a>
+                      @if (!auth.isAprovador() && r.estado === RequestState.PENDENTE) {
+                        <button
+                          type="button"
+                          class="icon-btn"
+                          title="Eliminar pedido"
+                          [disabled]="deletingId() === r.id"
+                          (click)="deleteRequest(r)"
+                        >
+                          🗑
+                        </button>
+                      }
                     </td>
                   </tr>
                 }
