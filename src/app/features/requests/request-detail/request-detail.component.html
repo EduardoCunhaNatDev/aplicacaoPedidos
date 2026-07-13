@@ -51,25 +51,28 @@
               <th>Justificação</th>
             </tr>
           </thead>
-          <tbody>
-            @for (state of timelineStates; track state) {
-              <tr [class.history-table__row--empty]="!historyEntryFor(state)">
-                <td>
-                  <span class="history-dot" [class]="'history-dot--' + state.toLowerCase()"></span>
-                  {{ state === RequestState.PENDENTE ? 'Pendente'
-                  : state === RequestState.APROVADO ? 'Aprovado' : 'Rejeitado' }}
-                </td>
-                @if (historyEntryFor(state); as entry) {
-                  <td>{{ entry.responsavelNome }}</td>
-                  <td>{{ entry.data | date: 'dd/MM/yyyy HH:mm':'Europe/Lisbon' }}</td>
-                  <td>{{ entry.justificativa }}</td>
-                } @else {
-                  <td>-</td>
-                  <td>-</td>
-                  <td>-</td>
+            <tbody>
+              @for (state of timelineStates; track state) {
+                @let entry = historyEntryFor(state);
+
+                <tr [class.history-table__row--empty]="!entry">
+                  <td>
+                    <span class="history-dot" [class]="'history-dot--' + state.toLowerCase()"></span>
+                    {{ state === RequestState.PENDENTE ? 'Pendente'
+                    : state === RequestState.APROVADO ? 'Aprovado' : 'Rejeitado' }}
+                  </td>
+
+                  @if (entry) {
+                    <td>{{ entry.responsavelNome }}</td>
+                    <td>{{ entry.data | date: 'dd/MM/yyyy HH:mm':'Europe/Lisbon' }}</td>
+                    <td>{{ entry.justificativa || '-' }}</td>
+                  } @else {
+                    <td>-</td>
+                    <td>-</td>
+                    <td>-</td>
+                  }
+                </tr>
                 }
-              </tr>
-            }
           </tbody>
         </table>
       </div>

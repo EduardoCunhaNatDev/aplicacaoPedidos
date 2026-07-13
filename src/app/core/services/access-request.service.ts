@@ -64,6 +64,14 @@ export class AccessRequestService {
     return this.http.put<AccessRequest>(`${this.base}/${id}/decisao`, null, { params });
   }
 
+  // NEW: only ever shown/enabled in the UI for the request's own owner while it's Pendente —
+  // the backend re-checks both of those regardless.
+  delete(id: number): Observable<void> {
+    const userId = this.authService.getUserId();
+    const headers = new HttpHeaders().set('X-User-ID', String(userId ?? ''));
+    return this.http.delete<void>(`${this.base}/${id}`, { headers });
+  }
+
   getDashboardSummary(): Observable<DashboardSummary> {
     return this.http.get<DashboardSummary>(`${this.base}/dashboard`);
   }

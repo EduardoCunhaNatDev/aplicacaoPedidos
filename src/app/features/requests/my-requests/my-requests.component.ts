@@ -21,6 +21,7 @@ export class MyRequestsComponent implements OnInit {
   readonly loading = signal(true);
   readonly requests = signal<AccessRequest[]>([]);
   readonly applications = signal<Application[]>([]);
+  readonly deletingId = signal<number | null>(null);
   readonly page = signal(0);
   readonly totalPages = signal(1);
   readonly totalElements = signal(0);
@@ -59,5 +60,23 @@ export class MyRequestsComponent implements OnInit {
   onPageChange(page: number): void {
     this.page.set(page);
     this.load();
+  }
+
+  deleteRequest(request: AccessRequest): void {
+    if (!confirm(`Eliminar o pedido #${request.id} (${request.aplicacaoNome})? Esta ação não pode ser revertida.`)) {
+      return;
+    }
+
+    this.deletingId.set(request.id);
+    this.requestsService.delete(request.id).subscribe({
+      next: () => {
+        this.deletingId.set(null);
+        this.load();
+      },
+      error: () => {
+        this.deletingId.set(null);
+        alert('Não foi possível eliminar o pedido. Tente novamente.');
+      },
+    });
   }
 }
