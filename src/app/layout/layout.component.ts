@@ -26,13 +26,12 @@ export class LayoutComponent {
     { label: 'Aplicações', path: '/aplicacoes', icon: '▦' },
   ];
 
-  private readonly aprovadorNav: NavItem[] = [
+    private readonly aprovadorNav: NavItem[] = [
     { label: 'Dashboard', path: '/dashboard', icon: '⌂' },
     { label: 'Pedidos Pendentes', path: '/pedidos-pendentes', icon: '◷' },
     { label: 'Todos os Pedidos', path: '/todos-os-pedidos', icon: '☰' },
     { label: 'Aplicações', path: '/aplicacoes', icon: '▦' },
     { label: 'Utilizadores', path: '/utilizadores', icon: '☺' },
-    { label: 'Auditoria', path: '/auditoria', icon: '◈' },
   ];
 
   readonly navItems = computed<NavItem[]>(() =>

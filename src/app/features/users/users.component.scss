@@ -1,2 +1,33 @@
 // Styling relies on shared utility classes in src/styles.scss
 // (.page-head, .filters-bar, .data-table, .overlay, .panel, .form-actions).
+
+/* Reduce the edit panel/card width for the users feature and enable internal scrolling */
+.overlay .panel {
+	width: 100%;
+	max-width: 420px;
+	padding: 16px;
+	max-height: calc(70vh);
+	display: flex;
+	flex-direction: column;
+	overflow: hidden;
+}
+
+/* Make the form scrollable inside the constrained panel while keeping actions visible */
+.overlay .panel > form {
+	display: flex;
+	flex-direction: column;
+	gap: 12px;
+	overflow-y: auto;
+	padding-right: 8px;
+	flex: 1 1 auto;
+}
+
+.overlay .panel__title {
+	font-size: 15px;
+	margin-bottom: 12px;
+}
+
+/* Keep form actions anchored at the bottom of the panel */
+.overlay .panel .form-actions {
+	margin-top: auto;
+}

@@ -1,7 +1,6 @@
 import { User } from '../models/user.model';
 import { Application } from '../models/application.model';
 import { AccessRequest } from '../models/access-request.model';
-import { AuditLog } from '../models/audit-log.model';
 import { RequestState, UserRole } from '../models/enums';
 
 /**
@@ -105,11 +104,6 @@ export const mockRequests: AccessRequest[] = [
   },
 ];
 
-export const mockAuditLogs: AuditLog[] = [
-  { id: 1, data: '2025-06-13T14:20:00', utilizadorId: 2, utilizadorNome: 'Ana Costa', acao: 'APROVAR_PEDIDO', entidade: 'Pedido #15', detalhes: 'Aprovou o acesso.' },
-  { id: 3, data: '2025-06-12T10:30:00', utilizadorId: 1, utilizadorNome: 'Eduardo Silva', acao: 'CRIAR_PEDIDO', entidade: 'Pedido #15', detalhes: 'Pedido criado.' },
-  { id: 4, data: '2025-06-10T11:05:00', utilizadorId: 3, utilizadorNome: 'João Santos', acao: 'CRIAR_PEDIDO', entidade: 'Pedido #18', detalhes: 'Pedido criado.' },
-];
 
 /** Simple auto-increment counters so mock creates get unique, ascending ids. */
 export const mockIdCounters = {
@@ -117,5 +111,5 @@ export const mockIdCounters = {
   requestHistory: 11,
   application: 5,
   user: 5,
-  auditLog: 5,
+  
 };

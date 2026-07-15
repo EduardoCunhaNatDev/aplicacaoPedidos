@@ -36,7 +36,9 @@
             <th>Nome</th>
             <th>Descrição</th>
             <th>Ativa</th>
-            <th>Pedido</th>
+            @if (!auth.isAprovador()) {
+              <th>Pedido</th>
+            }
             @if (auth.isAprovador()) {
               <th>Ações</th>
             }
@@ -51,17 +53,19 @@
               <td>
                 <span class="dot-status" [class.dot-status--on]="app.ativa">{{ app.ativa ? 'Sim' : 'Não' }}</span>
               </td>
-              <td class="actions-cell">
-                <button
-                  type="button"
-                  class="btn btn-ghost"
-                  (click)="startRequest(app)"
-                  [disabled]="!app.ativa"
-                  title="Abrir novo pedido para esta aplicação"
-                >
-                  Novo pedido
-                </button>
-              </td>
+              @if (!auth.isAprovador()) {
+                <td class="actions-cell">
+                  <button
+                    type="button"
+                    class="btn btn-ghost"
+                    (click)="startRequest(app)"
+                    [disabled]="!app.ativa"
+                    title="Abrir novo pedido para esta aplicação"
+                  >
+                    Novo pedido
+                  </button>
+                </td>
+              }
               @if (auth.isAprovador()) {
                 <td class="actions-cell">
                   <button class="icon-btn" type="button" (click)="openEdit(app)" title="Editar">✎</button>
