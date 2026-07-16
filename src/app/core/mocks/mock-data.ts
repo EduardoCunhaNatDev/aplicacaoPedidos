@@ -1,7 +1,7 @@
 import { User } from '../models/user.model';
 import { Application } from '../models/application.model';
 import { AccessRequest } from '../models/access-request.model';
-import { AuditLog } from '../models/audit-log.model';
+import { Department } from '../models/department.model';
 import { RequestState, UserRole } from '../models/enums';
 
 /**
@@ -10,11 +10,18 @@ import { RequestState, UserRole } from '../models/enums';
  * immediately in the UI. Resets whenever the page is fully reloaded.
  */
 
+export const mockDepartments: Department[] = [
+  { id: 1, nome: 'IT' },
+  { id: 2, nome: 'Finanças' },
+  { id: 3, nome: 'Operações' },
+  { id: 4, nome: 'Human Resources' },
+];
+
 export const mockUsers: User[] = [
-  { id: 1, nome: 'Eduardo Silva', email: 'eduardo.silva@natixis.com', departamento: 'IT', perfil: UserRole.COLABORADOR, ativo: true },
-  { id: 2, nome: 'Ana Costa', email: 'ana.costa@natixis.com', departamento: 'IT', perfil: UserRole.APROVADOR, ativo: true },
-  { id: 3, nome: 'João Santos', email: 'joao.santos@natixis.com', departamento: 'Finanças', perfil: UserRole.COLABORADOR, ativo: true },
-  { id: 4, nome: 'Mariana Rocha', email: 'mariana.rocha@natixis.com', departamento: 'Operações', perfil: UserRole.COLABORADOR, ativo: true },
+  { id: 1, nome: 'Eduardo Silva', email: 'eduardo.silva@natixis.com', departamento: 'IT', idDepartamento: 1, perfil: UserRole.COLABORADOR, ativo: true },
+  { id: 2, nome: 'Ana Costa', email: 'ana.costa@natixis.com', departamento: 'IT', idDepartamento: 1, perfil: UserRole.APROVADOR, ativo: true },
+  { id: 3, nome: 'João Santos', email: 'joao.santos@natixis.com', departamento: 'Finanças', idDepartamento: 2, perfil: UserRole.COLABORADOR, ativo: true },
+  { id: 4, nome: 'Mariana Rocha', email: 'mariana.rocha@natixis.com', departamento: 'Operações', idDepartamento: 3, perfil: UserRole.COLABORADOR, ativo: true },
 ];
 
 export const mockApplications: Application[] = [
@@ -105,11 +112,6 @@ export const mockRequests: AccessRequest[] = [
   },
 ];
 
-export const mockAuditLogs: AuditLog[] = [
-  { id: 1, data: '2025-06-13T14:20:00', utilizadorId: 2, utilizadorNome: 'Ana Costa', acao: 'APROVAR_PEDIDO', entidade: 'Pedido #15', detalhes: 'Aprovou o acesso.' },
-  { id: 3, data: '2025-06-12T10:30:00', utilizadorId: 1, utilizadorNome: 'Eduardo Silva', acao: 'CRIAR_PEDIDO', entidade: 'Pedido #15', detalhes: 'Pedido criado.' },
-  { id: 4, data: '2025-06-10T11:05:00', utilizadorId: 3, utilizadorNome: 'João Santos', acao: 'CRIAR_PEDIDO', entidade: 'Pedido #18', detalhes: 'Pedido criado.' },
-];
 
 /** Simple auto-increment counters so mock creates get unique, ascending ids. */
 export const mockIdCounters = {
@@ -117,5 +119,5 @@ export const mockIdCounters = {
   requestHistory: 11,
   application: 5,
   user: 5,
-  auditLog: 5,
+  
 };

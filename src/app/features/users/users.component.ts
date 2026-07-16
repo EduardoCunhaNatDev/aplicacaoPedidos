@@ -2,7 +2,9 @@ import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { UserService } from '../../core/services/user.service';
+import { DepartmentService } from '../../core/services/department.service';
 import { User, UserFormValue } from '../../core/models/user.model';
+import { Department } from '../../core/models/department.model';
 import { ROLE_LABEL, UserRole } from '../../core/models/enums';
 import { PaginationComponent } from '../../shared/components/pagination/pagination.component';
 
@@ -16,9 +18,11 @@ import { PaginationComponent } from '../../shared/components/pagination/paginati
 export class UsersComponent implements OnInit {
   private readonly fb = inject(FormBuilder);
   private readonly usersService = inject(UserService);
+  private readonly departmentsService = inject(DepartmentService);
 
   readonly loading = signal(true);
   readonly users = signal<User[]>([]);
+  readonly departments = signal<Department[]>([]);
   readonly page = signal(0);
   readonly totalPages = signal(1);
   readonly totalElements = signal(0);
@@ -35,7 +39,7 @@ export class UsersComponent implements OnInit {
   readonly form = this.fb.group({
     nome: ['', [Validators.required]],
     email: ['', [Validators.required, Validators.email]],
-    departamento: ['', [Validators.required]],
+    idDepartamento: [null as number | null, [Validators.required]],
     perfil: [UserRole.COLABORADOR, [Validators.required]],
     ativo: [true],
     password: [''],
@@ -43,6 +47,13 @@ export class UsersComponent implements OnInit {
 
   ngOnInit(): void {
     this.load();
+    this.loadDepartments();
+  }
+
+  loadDepartments(): void {
+    this.departmentsService.list().subscribe({
+      next: (departments) => this.departments.set(departments),
+    });
   }
 
   load(): void {
@@ -73,7 +84,7 @@ export class UsersComponent implements OnInit {
     this.form.reset({
       nome: '',
       email: '',
-      departamento: '',
+      idDepartamento: null,
       perfil: UserRole.COLABORADOR,
       ativo: true,
       password: '',
@@ -87,7 +98,7 @@ export class UsersComponent implements OnInit {
     this.form.reset({
       nome: user.nome,
       email: user.email,
-      departamento: user.departamento,
+      idDepartamento: user.idDepartamento,
       perfil: user.perfil,
       ativo: user.ativo,
       password: '',

@@ -5,6 +5,7 @@ export interface User {
   nome: string;
   email: string;
   departamento: string;
+  idDepartamento: number;
   perfil: UserRole;
   ativo: boolean;
 }
@@ -13,7 +14,7 @@ export interface User {
 export interface UserFormValue {
   nome: string;
   email: string;
-  departamento: string;
+  idDepartamento: number | null;
   perfil: UserRole;
   ativo: boolean;
   password?: string;

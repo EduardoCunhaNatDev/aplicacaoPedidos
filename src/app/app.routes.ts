@@ -69,11 +69,7 @@ export const routes: Routes = [
         loadComponent: () => import('./features/users/users.component').then((m) => m.UsersComponent),
         canActivate: [roleGuard([UserRole.APROVADOR])],
       },
-      {
-        path: 'auditoria',
-        loadComponent: () => import('./features/audit/audit-log.component').then((m) => m.AuditLogComponent),
-        canActivate: [roleGuard([UserRole.APROVADOR])],
-      },
+      
       {
         path: 'perfil',
         loadComponent: () => import('./features/profile/profile.component').then((m) => m.ProfileComponent),

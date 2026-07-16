@@ -28,8 +28,7 @@ export class PendingRequestsComponent implements OnInit {
   readonly totalPages = signal(1);
   readonly totalElements = signal(0);
 
-  filters: RequestFilters = { estado: RequestState.PENDENTE, aplicacaoId: 'TODOS', colaboradorId: 'TODOS', pesquisa: '' };
-  readonly RequestState = RequestState;
+  filters: RequestFilters = { aplicacaoId: 'TODOS', colaboradorId: 'TODOS', pesquisa: '' };
 
   constructor(
     private readonly requestsService: AccessRequestService,
@@ -45,7 +44,7 @@ export class PendingRequestsComponent implements OnInit {
 
   load(): void {
     this.loading.set(true);
-    this.requestsService.getPendingRequests({ ...this.filters, page: this.page(), size: 20 }).subscribe({
+    this.requestsService.getPendingRequests({ ...this.filters, estado: RequestState.PENDENTE, page: this.page(), size: 20 }).subscribe({
       next: (result) => {
         this.requests.set(result.content);
         this.totalPages.set(result.totalPages);

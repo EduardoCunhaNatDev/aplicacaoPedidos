@@ -1,13 +1,13 @@
 import { HttpErrorResponse, HttpInterceptorFn, HttpResponse } from '@angular/common/http';
 import { delay, of, throwError } from 'rxjs';
 import { environment } from '../../../environments/environment';
-import { mockApplications, mockAuditLogs, mockIdCounters, mockRequests, mockUsers } from '../mocks/mock-data';
+import { mockApplications, mockDepartments, mockIdCounters, mockRequests, mockUsers } from '../mocks/mock-data';
 import { Page } from '../models/page.model';
 import { RequestState, UserRole } from '../models/enums';
 import { AccessRequest, DecisionPayload, NewAccessRequestPayload } from '../models/access-request.model';
 import { Application, ApplicationFormValue } from '../models/application.model';
 import { User, UserFormValue } from '../models/user.model';
-import { AuditLog } from '../models/audit-log.model';
+
 
 const LATENCY_MS = 350;
 
@@ -67,11 +67,13 @@ function route(method: string, path: string, body: any, params: any, currentUser
   if (method === 'GET' && path === '/utilizadores') return listUsers(params);
   if (method === 'POST' && path === '/utilizadores') return createUser(body);
 
+  if (method === 'GET' && path === '/departamentos') return mockDepartments;
+
   m = idMatch(/^\/utilizadores\/(\d+)$/);
   if (method === 'PUT' && m) return updateUser(Number(m![1]), body);
   if (method === 'DELETE' && m) return deleteUser(Number(m![1]));
 
-  if (method === 'GET' && path === '/auditoria') return listAuditLogs(params);
+  
 
   throw badRequest(`Mock API: sem rota para ${method} ${path}`, 404);
 }
@@ -194,15 +196,6 @@ function createRequest(user: User, payload: NewAccessRequestPayload): AccessRequ
   };
 
   mockRequests.unshift(request);
-  mockAuditLogs.unshift({
-    id: mockIdCounters.auditLog++,
-    data: now,
-    utilizadorId: user.id,
-    utilizadorNome: user.nome,
-    acao: 'CRIAR_PEDIDO',
-    entidade: `Pedido #${id}`,
-    detalhes: 'Pedido criado.',
-  });
 
   return request;
 }
@@ -228,15 +221,7 @@ function decideRequest(user: User, id: number, payload: DecisionPayload): Access
     justificativa: payload.justificativaDecisao,
   });
 
-  mockAuditLogs.unshift({
-    id: mockIdCounters.auditLog++,
-    data: now,
-    utilizadorId: user.id,
-    utilizadorNome: user.nome,
-    acao: payload.decisao === RequestState.APROVADO ? 'APROVAR_PEDIDO' : 'REJEITAR_PEDIDO',
-    entidade: `Pedido #${id}`,
-    detalhes: payload.justificativaDecisao,
-  });
+  
 
   return request;
 }
@@ -287,7 +272,8 @@ function listUsers(params: any): Page<User> {
 
 function createUser(payload: UserFormValue): User {
   const { password, ...rest } = payload;
-  const user: User = { id: mockIdCounters.user++, ...rest };
+  const departamento = mockDepartments.find((d) => d.id === rest.idDepartamento)?.nome ?? '';
+  const user: User = { id: mockIdCounters.user++, ...rest, idDepartamento: rest.idDepartamento ?? 0, departamento };
   mockUsers.push(user);
   return user;
 }
@@ -296,7 +282,8 @@ function updateUser(id: number, payload: UserFormValue): User {
   const user = mockUsers.find((u) => u.id === id);
   if (!user) throw badRequest(`Utilizador #${id} não encontrado.`, 404);
   const { password, ...rest } = payload;
-  Object.assign(user, rest);
+  const departamento = mockDepartments.find((d) => d.id === rest.idDepartamento)?.nome ?? user.departamento;
+  Object.assign(user, rest, { departamento });
   return user;
 }
 
@@ -307,24 +294,7 @@ function deleteUser(id: number): null {
   return null;
 }
 
-// ---------------------------------------------------------------------------
-// Audit log
-// ---------------------------------------------------------------------------
 
-function listAuditLogs(params: any): Page<AuditLog> {
-  const utilizadorId = params.get('utilizadorId');
-  const acao = params.get('acao');
-  const pesquisa = (params.get('pesquisa') ?? '').toLowerCase();
-
-  const items = mockAuditLogs.filter((log) => {
-    if (utilizadorId && log.utilizadorId !== Number(utilizadorId)) return false;
-    if (acao && log.acao !== acao) return false;
-    if (pesquisa && !`${log.utilizadorNome} ${log.acao} ${log.entidade} ${log.detalhes}`.toLowerCase().includes(pesquisa)) return false;
-    return true;
-  });
-
-  return paginate(sortByDateDesc(items, (l) => l.data), params);
-}
 
 // ---------------------------------------------------------------------------
 // Shared helpers
